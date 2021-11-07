@@ -11,16 +11,22 @@ namespace Commander.Data.Repository {
         public CommanderSqlRepository(CommanderContext context) {
             _contex = context;
         }
-        
-        public async Task<IEnumerable<Command>> GetAll() {
+
+        public async Task<Command> AddAsync(Command command) {
+            await _contex.Commands.AddAsync(command);
+            await _contex.SaveChangesAsync();
+            return command;
+        }
+
+        public async Task<IReadOnlyCollection<Command>> GetAllAsync() {
             return await _contex.Commands.ToListAsync();
         }
 
-        public async Task<Command> GetById(short id) {
+        public async Task<Command> GetByIdAsync(short id) {
             return await _contex.Commands.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Command>> GetByHowToContainsWord(string wordContains) {
+        public async Task<IReadOnlyCollection<Command>> GetByHowToContainsWordAsync(string wordContains) {
             return await _contex.Commands.Where(command => command.HowTo.ToUpper().Contains(wordContains.ToUpper()))
                 .ToListAsync();
         }
